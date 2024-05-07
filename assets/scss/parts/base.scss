@@ -1,0 +1,20 @@
+body {
+    background: $color--bg;
+    color: $color--main;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+a {
+    color: $color--accent;
+
+    &:hover {
+        //color: darken($color: $color--accent, $amount: 20);
+        color: $color--action;
+    }
+}
+
+main {
+    margin-top: $header-heigth;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
