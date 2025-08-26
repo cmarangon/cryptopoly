@@ -1,0 +1,53 @@
+// Property Color Groups
+.property {
+    &.color-brown { 
+        background: linear-gradient(45deg, #8B4513, #A0522D); 
+        border-color: #654321;
+    }
+    &.color-lightblue { 
+        background: linear-gradient(45deg, #87CEEB, #4682B4); 
+        border-color: #4169E1;
+    }
+    &.color-pink { 
+        background: linear-gradient(45deg, #FFB6C1, #FF69B4); 
+        border-color: #FF1493;
+    }
+    &.color-orange { 
+        background: linear-gradient(45deg, #FFA500, #FF8C00); 
+        border-color: #FF6347;
+    }
+    &.color-red { 
+        background: linear-gradient(45deg, #DC143C, #B22222); 
+        border-color: #8B0000;
+    }
+    &.color-yellow { 
+        background: linear-gradient(45deg, #FFD700, #FFA500); 
+        border-color: #DAA520;
+    }
+    &.color-green { 
+        background: linear-gradient(45deg, #32CD32, #228B22); 
+        border-color: #006400;
+    }
+    &.color-darkblue { 
+        background: linear-gradient(45deg, #191970, #000080); 
+        border-color: #000080;
+    }
+
+    // Special space types
+    &.chance-card {
+        background: linear-gradient(45deg, #FF6B35, #F7931E);
+        border-color: #E65100;
+    }
+    &.tax-space {
+        background: linear-gradient(45deg, #795548, #5D4037);
+        border-color: #3E2723;
+    }
+    &.utility-space {
+        background: linear-gradient(45deg, #607D8B, #455A64);
+        border-color: #263238;
+    }
+    &.railroad-space {
+        background: linear-gradient(45deg, #424242, #212121);
+        border-color: #000000;
+    }
+}

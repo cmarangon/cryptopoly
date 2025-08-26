@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Crypto Trading - CryptoPoly{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container" data-controller="crypto-trading" data-crypto-trading-game-id-value="{{ game.id }}">
+    <a href="{{ path('app_game_play', {'id': game.id}) }}" class="back-btn">← Back to Game</a>
+    <h1>💱 Crypto Trading</h1>
+    
+    <div class="fee-notice">
+        <strong>⚠️ Trading Fee: 2%</strong><br>
+        All trades are subject to a 2% fee deducted from the received amount.
+    </div>
+
+    <!-- Crypto Price Charts Section -->
+    <div class="crypto-charts-section">
+        <h2 class="section-title">Price History Charts</h2>
+        <div class="charts-grid">
+            {% for cryptoName, cryptoData in cryptoPrices %}
+                <div class="chart-container" data-controller="crypto-chart" 
+                     data-crypto-chart-game-id-value="{{ game.id }}"
+                     data-crypto-chart-crypto-name-value="{{ cryptoName }}">
+                    <div class="chart-header">
+                        <span class="crypto-symbol">
+                            {{ cryptoData.symbol }}
+                        </span>
+                        <div class="crypto-info">
+                            <div class="crypto-name">{{ cryptoData.name }}</div>
+                            <div class="crypto-current-price">${{ cryptoData.price|number_format(2) }}</div>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas data-crypto-chart-target="canvas"></canvas>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="trading-interface">
+        <!-- Sell Section -->
+        <div class="trade-section">
+            <h2 class="section-title">Sell (From Portfolio)</h2>
+            
+            <div class="crypto-select">
+                <div class="crypto-grid" data-crypto-trading-target="sellOptions">
+                    <div class="crypto-option" data-crypto="bitcoin" data-action="click->crypto-trading#selectSellCrypto">
+                        <span class="crypto-symbol" style="color: #f7931a;">₿</span>
+                        <div class="crypto-name">BitCoin</div>
+                        <div class="crypto-balance">Balance: $25.00</div>
+                        <div class="crypto-price">$45.50</div>
+                    </div>
+                    <div class="crypto-option" data-crypto="ethereum" data-action="click->crypto-trading#selectSellCrypto">
+                        <span class="crypto-symbol" style="color: #627eea;">Ξ</span>
+                        <div class="crypto-name">EthCoin</div>
+                        <div class="crypto-balance">Balance: $35.00</div>
+                        <div class="crypto-price">$32.25</div>
+                    </div>
+                    <div class="crypto-option disabled" data-crypto="dogecoin">
+                        <span class="crypto-symbol" style="color: #c2a633;">Ð</span>
+                        <div class="crypto-name">DogeCoin</div>
+                        <div class="crypto-balance">Balance: $0.00</div>
+                        <div class="crypto-price">$8.75</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="amount-input-section">
+                <label class="amount-input-label">Amount to Sell ($)</label>
+                <input type="number" class="amount-input" placeholder="0.00" min="0" step="0.01"
+                       data-action="input->crypto-trading#updateSellAmount" data-crypto-trading-target="sellAmountInput">
+                <button class="max-btn" data-action="click->crypto-trading#maxSell">Max</button>
+            </div>
+        </div>
+        
+        <!-- Buy Section -->
+        <div class="trade-section">
+            <h2 class="section-title">Buy (Add to Portfolio)</h2>
+            
+            <div class="crypto-select">
+                <div class="crypto-grid" data-crypto-trading-target="buyOptions">
+                    <div class="crypto-option" data-crypto="bitcoin" data-action="click->crypto-trading#selectBuyCrypto">
+                        <span class="crypto-symbol" style="color: #f7931a;">₿</span>
+                        <div class="crypto-name">BitCoin</div>
+                        <div class="crypto-price">$45.50</div>
+                    </div>
+                    <div class="crypto-option" data-crypto="ethereum" data-action="click->crypto-trading#selectBuyCrypto">
+                        <span class="crypto-symbol" style="color: #627eea;">Ξ</span>
+                        <div class="crypto-name">EthCoin</div>
+                        <div class="crypto-price">$32.25</div>
+                    </div>
+                    <div class="crypto-option" data-crypto="dogecoin" data-action="click->crypto-trading#selectBuyCrypto">
+                        <span class="crypto-symbol" style="color: #c2a633;">Ð</span>
+                        <div class="crypto-name">DogeCoin</div>
+                        <div class="crypto-price">$8.75</div>
+                    </div>
+                    <div class="crypto-option" data-crypto="tether" data-action="click->crypto-trading#selectBuyCrypto">
+                        <span class="crypto-symbol" style="color: #00d4aa;">₮</span>
+                        <div class="crypto-name">TetherCoin</div>
+                        <div class="crypto-price">$15.90</div>
+                    </div>
+                    <div class="crypto-option" data-crypto="binance" data-action="click->crypto-trading#selectBuyCrypto">
+                        <span class="crypto-symbol" style="color: #f0b90b;">◇</span>
+                        <div class="crypto-name">BinanceCoin</div>
+                        <div class="crypto-price">$28.40</div>
+                    </div>
+                    <div class="crypto-option" data-crypto="cardano" data-action="click->crypto-trading#selectBuyCrypto">
+                        <span class="crypto-symbol" style="color: #1652f0;">◆</span>
+                        <div class="crypto-name">CardanoCoin</div>
+                        <div class="crypto-price">$12.15</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="amount-input-section">
+                <label class="amount-input-label">Amount You'll Receive ($)</label>
+                <input type="number" class="amount-input" placeholder="0.00" readonly
+                       data-crypto-trading-target="buyAmountInput">
+                <div style="font-size: 0.8rem; color: #95a5a6; margin-top: 0.5rem;">
+                    After 2% trading fee
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Summary -->
+    <div class="trade-summary">
+        <h2 class="section-title">Trade Summary</h2>
+        
+        <div class="summary-item">
+            <div class="summary-label">Selling:</div>
+            <div class="summary-value" data-crypto-trading-target="sellingSummary">Select crypto to sell</div>
+        </div>
+        
+        <div class="summary-item">
+            <div class="summary-label">Buying:</div>
+            <div class="summary-value" data-crypto-trading-target="buyingSummary">Select crypto to buy</div>
+        </div>
+        
+        <div class="summary-item">
+            <div class="summary-label">Exchange Rate:</div>
+            <div class="summary-value" data-crypto-trading-target="exchangeRate">-</div>
+        </div>
+        
+        <div class="summary-item">
+            <div class="summary-label">Trading Fee (2%):</div>
+            <div class="summary-value" data-crypto-trading-target="tradingFee">$0.00</div>
+        </div>
+    </div>
+    
+    <div class="error-message" data-crypto-trading-target="errorMessage" style="display: none;"></div>
+    
+    <button class="trade-button" data-action="click->crypto-trading#executeTrade" 
+            data-crypto-trading-target="tradeButton" disabled>
+        💱 Execute Trade
+    </button>
+</div>
+{% endblock %}

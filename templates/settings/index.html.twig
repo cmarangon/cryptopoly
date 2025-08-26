@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Settings - CryptoPoly{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+        color: #ecf0f1;
+        font-family: 'Courier New', monospace;
+        min-height: 100vh;
+        margin: 0;
+        padding: 2rem;
+    }
+    
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    h1 {
+        color: #f39c12;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .back-btn {
+        background: linear-gradient(45deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 0.8rem 2rem;
+        text-decoration: none;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
+    }
+</style>
+
+<div class="container">
+    <a href="{{ path('app_welcome') }}" class="back-btn">← Back to Main Menu</a>
+    <h1>⚙️ Settings</h1>
+    <p>Game settings coming soon...</p>
+</div>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CryptoPoly Game - Turn {{ game.currentTurn }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="game-container" data-controller="game-play" data-game-play-game-id-value="{{ game.id }}">
+    <!-- Game Board -->
+    <div class="board-container">
+        <div class="monopoly-board">
+            <div class="board-center">
+                <h2>CRYPTOPOLY</h2>
+                <div class="subtitle">Turn {{ game.currentTurn }}</div>
+            </div>
+
+            <!-- Player Piece -->
+            <div class="player-piece pos-{{ currentPlayer.position }}" data-game-play-target="playerPiece">
+                {{ currentPlayer.character == 'hacker' ? '👨‍💻' :
+                   currentPlayer.character == 'trader' ? '📈' :
+                   currentPlayer.character == 'investor' ? '💼' :
+                   currentPlayer.character == 'miner' ? '⛏️' :
+                   currentPlayer.character == 'whale' ? '🐋' : '💎' }}
+            </div>
+
+            {% for space in boardSpaces %}
+                {% set position = space.position %}
+                {% set spaceClass = "" %}
+
+                {# Determine space position and styling based on position #}
+                {% if position == 0 %}
+                    {% set spaceClass = "property corner go" %}
+                {% elseif position == 10 %}
+                    {% set spaceClass = "property corner jail" %}
+                {% elseif position == 20 %}
+                    {% set spaceClass = "property corner free-parking" %}
+                {% elseif position == 30 %}
+                    {% set spaceClass = "property corner go-to-jail" %}
+                {% elseif position >= 1 and position <= 9 %}
+                    {% set spaceClass = "property side bottom-" ~ position %}
+                {% elseif position >= 11 and position <= 19 %}
+                    {% set spaceClass = "property side left-" ~ (position - 10) %}
+                {% elseif position >= 21 and position <= 29 %}
+                    {% set spaceClass = "property side top-" ~ (position - 20) %}
+                {% elseif position >= 31 and position <= 39 %}
+                    {% set spaceClass = "property side right-" ~ (position - 30) %}
+                {% endif %}
+
+                {# Add color classes for properties #}
+                {% if space.type.value == 'property' and space.color %}
+                    {% set spaceClass = spaceClass ~ " color-" ~ space.color %}
+                {% elseif space.type.value == 'chance' %}
+                    {% set spaceClass = spaceClass ~ " chance-card" %}
+                {% elseif space.type.value == 'tax' %}
+                    {% set spaceClass = spaceClass ~ " tax-space" %}
+                {% elseif space.type.value == 'utility' %}
+                    {% set spaceClass = spaceClass ~ " utility-space" %}
+                {% elseif space.type.value == 'railroad' %}
+                    {% set spaceClass = spaceClass ~ " railroad-space" %}
+                {% endif %}
+
+                <div class="{{ spaceClass }}" data-position="{{ position }}" data-type="{{ space.type.value }}">
+                    {% if position == 0 %}
+                        <div class="property-name">GO</div>
+                        <div class="property-price">Collect $200</div>
+                    {% elseif position == 10 %}
+                        <div class="property-name">JAIL</div>
+                        <div class="property-price">Just Visiting</div>
+                    {% elseif position == 20 %}
+                        <div class="property-name">FREE</div>
+                        <div class="property-price">PARKING</div>
+                    {% elseif position == 30 %}
+                        <div class="property-name">GO TO</div>
+                        <div class="property-price">JAIL</div>
+                    {% else %}
+                        <div class="property-name">{{ space.name }}</div>
+                        {% if space.type.value == 'tax' %}
+                            <div class="property-price">${{ space.taxAmount ?? 0 }}</div>
+                        {% elseif space.type.value == 'property' or space.type.value == 'utility' or space.type.value == 'railroad' %}
+                            <div class="property-price">${{ space.price ?? 0 }}</div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Turn Info -->
+        <div class="turn-info">
+            <div style="text-align: center;">
+                <strong>Turn {{ game.currentTurn }}</strong><br>
+                <small>{{ currentPlayer.name }}'s Turn</small>
+            </div>
+        </div>
+
+        <!-- Player Info -->
+        <div class="game-section">
+            <h3 class="section-title">Player</h3>
+            <div class="character-display">
+                <span class="character-emoji">
+                    {{ currentPlayer.character == 'hacker' ? '👨‍💻' :
+                       currentPlayer.character == 'trader' ? '📈' :
+                       currentPlayer.character == 'investor' ? '💼' :
+                       currentPlayer.character == 'miner' ? '⛏️' :
+                       currentPlayer.character == 'whale' ? '🐋' : '💎' }}
+                </span>
+                <div class="character-name">{{ currentPlayer.name }}</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-label">Cash:</div>
+                <div class="stat-value" data-game-play-target="playerCash">${{ currentPlayer.cash|number_format }}</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-label">Position:</div>
+                <div class="stat-value" data-game-play-target="playerPosition">{{ currentPlayer.position }}</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-label">Net Worth:</div>
+                <div class="stat-value">${{ currentPlayer.totalNetWorth|number_format }}</div>
+            </div>
+        </div>
+
+        <!-- Dice & Actions -->
+        <div class="game-section">
+            <h3 class="section-title">Actions</h3>
+
+            <div class="dice-result" data-game-play-target="diceResult">
+                <div class="dice-display" data-game-play-target="diceDisplay">🎲 🎲</div>
+                <div class="move-info" data-game-play-target="moveInfo"></div>
+            </div>
+
+            <button class="game-btn primary" data-action="click->game-play#rollDice" data-game-play-target="rollButton">
+                🎲 Roll Dice
+            </button>
+            <button class="game-btn" data-action="click->game-play#tradeCrypto">💱 Trade Crypto</button>
+            <button class="game-btn danger" data-action="click->game-play#endTurn" data-game-play-target="endTurnButton" disabled>
+                ⏭️ End Turn
+            </button>
+        </div>
+
+        <!-- Crypto Portfolio -->
+        <div class="game-section">
+            <h3 class="section-title">Portfolio</h3>
+            <div data-game-play-target="cryptoPortfolio">
+                {% for crypto, amount in currentPlayer.cryptoPortfolio %}
+                    {% if amount > 0 %}
+                        <div class="crypto-item">
+                            <span class="crypto-symbol" style="color:
+                                {{ crypto == 'bitcoin' ? '#f7931a' :
+                                   crypto == 'ethereum' ? '#627eea' :
+                                   crypto == 'dogecoin' ? '#c2a633' :
+                                   crypto == 'tether' ? '#00d4aa' :
+                                   crypto == 'binance' ? '#f0b90b' : '#1652f0' }}">
+                                {{ crypto == 'bitcoin' ? '₿' :
+                                   crypto == 'ethereum' ? 'Ξ' :
+                                   crypto == 'dogecoin' ? 'Ð' :
+                                   crypto == 'tether' ? '₮' :
+                                   crypto == 'binance' ? '◇' : '◆' }}
+                            </span>
+                            <div class="crypto-name">
+                                {{ crypto == 'bitcoin' ? 'BitCoin' :
+                                   crypto == 'ethereum' ? 'EthCoin' :
+                                   crypto == 'dogecoin' ? 'DogeCoin' :
+                                   crypto == 'tether' ? 'TetherCoin' :
+                                   crypto == 'binance' ? 'BinanceCoin' : 'CardanoCoin' }}
+                            </div>
+                            <div class="crypto-amount">${{ amount|number_format(2) }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Current Crypto Prices -->
+        <div class="game-section">
+            <h3 class="section-title">Market Prices</h3>
+            <div class="crypto-prices" data-game-play-target="cryptoPrices">
+                <!-- Prices will be loaded via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

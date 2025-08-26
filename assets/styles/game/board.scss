@@ -1,0 +1,241 @@
+// Monopoly Board Styles
+.monopoly-board {
+    width: min(65vw, calc(100vh - 8rem));
+    height: min(65vw, calc(100vh - 8rem));
+    min-width: 500px;
+    min-height: 500px;
+    background: linear-gradient(135deg, #0a0a0f, #1a1a2e);
+    box-shadow: 
+        0 0 50px rgba(0, 255, 255, 0.1),
+        inset 0 0 100px rgba(0, 0, 0, 0.3);
+    display: grid;
+    grid-template-columns: 13.3% repeat(9, 1fr) 13.3%;
+    grid-template-rows: 13.3% repeat(9, 1fr) 13.3%;
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: 
+            linear-gradient(0deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: calc(100% / 11) calc(100% / 11);
+        pointer-events: none;
+    }
+}
+
+.board-center {
+    grid-column: 2 / -2;
+    grid-row: 2 / -2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #f39c12;
+    position: relative;
+
+    h2 {
+        font-size: clamp(1.5rem, 2.5vw, 3rem);
+        margin: 0;
+        text-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+
+    .subtitle {
+        font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+        opacity: 0.8;
+        margin-top: 0.5rem;
+    }
+}
+
+// Properties
+.property {
+    background: rgba(15, 15, 35, 0.9);
+    color: #e0e0e0;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.5rem, 1vw, 1rem);
+    padding: .5rem;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 255, 0.03) 50%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .property-name {
+        font-weight: 600;
+        font-size: 1em;
+        text-align: center;
+        line-height: 1.1;
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .property-price {
+        font-size: 0.7em;
+        opacity: 0.8;
+        margin: .5rem;
+        text-align: center;
+        line-height: 1;
+        color: #00ffff;
+        font-weight: 400;
+        font-family: 'Courier New', monospace;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 8px 25px rgba(0, 255, 255, 0.15),
+            0 0 20px rgba(0, 255, 255, 0.1);
+        z-index: 10;
+        
+        &::before {
+            opacity: 1;
+        }
+        
+        .property-name {
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        .property-price {
+            color: #66ffff;
+        }
+    }
+
+    &.corner {
+        font-size: clamp(0.6rem, 1.2vw, 1.2rem);
+        background: rgba(10, 10, 25, 0.95);
+        
+        .property-name {
+            font-weight: 700;
+        }
+    }
+
+    // Corner positions using grid
+    &.go {
+        grid-column: 11;
+        grid-row: 11;
+        background: linear-gradient(135deg, #00ff88, #00cc6a);
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    }
+    &.jail {
+        grid-column: 1;
+        grid-row: 11;
+        background: linear-gradient(135deg, #ff3366, #cc1144);
+        box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+    }
+    &.free-parking {
+        grid-column: 1;
+        grid-row: 1;
+        background: linear-gradient(135deg, #aa66ff, #8844cc);
+        box-shadow: 0 0 20px rgba(170, 102, 255, 0.3);
+    }
+    &.go-to-jail {
+        grid-column: 11;
+        grid-row: 1;
+        background: linear-gradient(135deg, #ff6600, #cc4400);
+        box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+    }
+
+    // Bottom side - using grid positioning
+    @for $i from 1 through 9 {
+        &.bottom-#{$i} {
+            grid-column: #{11 - $i};
+            grid-row: 11;
+        }
+    }
+
+    // Left side - using grid positioning with writing-mode
+    @for $i from 1 through 9 {
+        &.left-#{$i} {
+            grid-column: 1;
+            grid-row: #{11 - $i};
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+        }
+    }
+
+    // Top side - using grid positioning with upside-down text
+    @for $i from 1 through 9 {
+        &.top-#{$i} {
+            grid-column: #{$i + 1};
+            grid-row: 1;
+            transform: rotate(180deg);
+        }
+    }
+
+    // Right side - using grid positioning with writing-mode
+    @for $i from 1 through 9 {
+        &.right-#{$i} {
+            grid-column: 11;
+            grid-row: #{$i + 1};
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+    }
+}
+
+// Player piece
+.player-piece {
+    background: linear-gradient(135deg, #00ffff, #0099cc);
+    border: 2px solid #00ccff;
+    border-radius: 50%;
+    z-index: 20;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1rem, 1.5vw, 2rem);
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 255, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+    
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 
+            0 0 30px rgba(0, 255, 255, 0.6),
+            inset 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+
+    // Position calculations for player piece - using grid
+    @for $i from 0 through 10 {
+        &.pos-#{$i} {
+            grid-column: #{11 - $i};
+            grid-row: 11;
+        }
+    }
+    @for $i from 11 through 20 {
+        &.pos-#{$i} {
+            grid-column: 1;
+            grid-row: #{21 - $i};
+        }
+    }
+    @for $i from 21 through 30 {
+        &.pos-#{$i} {
+            grid-column: #{$i - 19};
+            grid-row: 1;
+        }
+    }
+    @for $i from 31 through 39 {
+        &.pos-#{$i} {
+            grid-column: 11;
+            grid-row: #{$i - 29};
+        }
+    }
+}

@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Game - CryptoPoly{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container" data-controller="game-setup">
+    <a href="{{ path('app_welcome') }}" class="back-btn">← Back to Main Menu</a>
+    <h1>🎮 New Game Setup</h1>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-line" data-game-setup-target="progressLine"></div>
+        
+        <div class="progress-step">
+            <div class="step-circle active" data-game-setup-target="stepCircle1">1</div>
+            <div class="step-label active" data-game-setup-target="stepLabel1">Character</div>
+        </div>
+        
+        <div class="progress-step">
+            <div class="step-circle" data-game-setup-target="stepCircle2">2</div>
+            <div class="step-label" data-game-setup-target="stepLabel2">Portfolio</div>
+        </div>
+        
+        <div class="progress-step">
+            <div class="step-circle" data-game-setup-target="stepCircle3">3</div>
+            <div class="step-label" data-game-setup-target="stepLabel3">Summary</div>
+        </div>
+    </div>
+    
+    <!-- Step 1: Character Selection -->
+    <div class="form-step active" data-game-setup-target="step1">
+        <div class="setup-section">
+            <h2 class="section-title">Choose Your Character</h2>
+            <div class="character-grid">
+                <div class="character-option" data-character="hacker" data-action="click->game-setup#selectCharacter">
+                    <span class="character-emoji">👨‍💻</span>
+                    <div class="character-name">Crypto Hacker</div>
+                </div>
+                <div class="character-option" data-character="trader" data-action="click->game-setup#selectCharacter">
+                    <span class="character-emoji">📈</span>
+                    <div class="character-name">Day Trader</div>
+                </div>
+                <div class="character-option" data-character="investor" data-action="click->game-setup#selectCharacter">
+                    <span class="character-emoji">💼</span>
+                    <div class="character-name">Investor</div>
+                </div>
+                <div class="character-option" data-character="miner" data-action="click->game-setup#selectCharacter">
+                    <span class="character-emoji">⛏️</span>
+                    <div class="character-name">Crypto Miner</div>
+                </div>
+                <div class="character-option" data-character="whale" data-action="click->game-setup#selectCharacter">
+                    <span class="character-emoji">🐋</span>
+                    <div class="character-name">Crypto Whale</div>
+                </div>
+                <div class="character-option" data-character="hodler" data-action="click->game-setup#selectCharacter">
+                    <span class="character-emoji">💎</span>
+                    <div class="character-name">HODLer</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-navigation">
+            <div></div> <!-- Empty div for spacing -->
+            <button class="step-btn next" data-action="click->game-setup#nextStep" data-game-setup-target="nextButton1" disabled>
+                Next Step →
+            </button>
+        </div>
+    </div>
+    
+    <!-- Step 2: Crypto Portfolio Allocation -->
+    <div class="form-step" data-game-setup-target="step2">
+        <div class="setup-section">
+            <h2 class="section-title">Allocate Your Starting Budget ($100)</h2>
+            <div class="remaining-budget" data-game-setup-target="remainingBudget">
+                Remaining: $<span data-game-setup-target="remainingAmount">100</span>
+            </div>
+            
+            <div class="crypto-grid">
+                <div class="crypto-card">
+                    <span class="crypto-symbol" style="color: #f7931a;">₿</span>
+                    <div class="crypto-name">BitCoin</div>
+                    <div class="crypto-price">$45.50</div>
+                    <input type="number" class="amount-input" placeholder="$0" min="0" max="100" 
+                           data-crypto="bitcoin" data-action="input->game-setup#updateBudget">
+                </div>
+                
+                <div class="crypto-card">
+                    <span class="crypto-symbol" style="color: #627eea;">Ξ</span>
+                    <div class="crypto-name">EthCoin</div>
+                    <div class="crypto-price">$32.25</div>
+                    <input type="number" class="amount-input" placeholder="$0" min="0" max="100"
+                           data-crypto="ethereum" data-action="input->game-setup#updateBudget">
+                </div>
+                
+                <div class="crypto-card">
+                    <span class="crypto-symbol" style="color: #c2a633;">Ð</span>
+                    <div class="crypto-name">DogeCoin</div>
+                    <div class="crypto-price">$8.75</div>
+                    <input type="number" class="amount-input" placeholder="$0" min="0" max="100"
+                           data-crypto="dogecoin" data-action="input->game-setup#updateBudget">
+                </div>
+                
+                <div class="crypto-card">
+                    <span class="crypto-symbol" style="color: #00d4aa;">₮</span>
+                    <div class="crypto-name">TetherCoin</div>
+                    <div class="crypto-price">$15.90</div>
+                    <input type="number" class="amount-input" placeholder="$0" min="0" max="100"
+                           data-crypto="tether" data-action="input->game-setup#updateBudget">
+                </div>
+                
+                <div class="crypto-card">
+                    <span class="crypto-symbol" style="color: #f0b90b;">◇</span>
+                    <div class="crypto-name">BinanceCoin</div>
+                    <div class="crypto-price">$28.40</div>
+                    <input type="number" class="amount-input" placeholder="$0" min="0" max="100"
+                           data-crypto="binance" data-action="input->game-setup#updateBudget">
+                </div>
+                
+                <div class="crypto-card">
+                    <span class="crypto-symbol" style="color: #1652f0;">◆</span>
+                    <div class="crypto-name">CardanoCoin</div>
+                    <div class="crypto-price">$12.15</div>
+                    <input type="number" class="amount-input" placeholder="$0" min="0" max="100"
+                           data-crypto="cardano" data-action="input->game-setup#updateBudget">
+                </div>
+            </div>
+            
+            <div class="error-message" data-game-setup-target="errorMessage" style="display: none;"></div>
+        </div>
+        
+        <div class="step-navigation">
+            <button class="step-btn prev" data-action="click->game-setup#prevStep">
+                ← Previous Step
+            </button>
+            <button class="step-btn next" data-action="click->game-setup#nextStep" data-game-setup-target="nextButton2" disabled>
+                Next Step →
+            </button>
+        </div>
+    </div>
+    
+    <!-- Step 3: Summary -->
+    <div class="form-step" data-game-setup-target="step3">
+        <div class="summary-section">
+            <h2 class="section-title">Game Setup Summary</h2>
+            
+            <div class="summary-item">
+                <div class="summary-label">Selected Character:</div>
+                <div class="summary-value">
+                    <div class="selected-character" data-game-setup-target="selectedCharacterSummary">
+                        <span class="selected-character-emoji">👨‍💻</span>
+                        <span>Crypto Hacker</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <div class="summary-label">Starting Cash:</div>
+                <div class="summary-value" data-game-setup-target="remainingCashSummary">$100</div>
+            </div>
+            
+            <div class="summary-item">
+                <div class="summary-label">Crypto Portfolio:</div>
+                <div class="summary-value">
+                    <div data-game-setup-target="cryptoPortfolioSummary">
+                        <!-- Portfolio will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-navigation">
+            <button class="step-btn prev" data-action="click->game-setup#prevStep">
+                ← Previous Step
+            </button>
+            <button class="start-game-btn" data-action="click->game-setup#startGame" data-game-setup-target="startButton">
+                🚀 Start Game
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
