@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\DTO\MoveResult;
+use App\DTO\PlayerSetupData;
+use App\DTO\PurchaseResult;
 use App\Entity\Game;
 use App\Entity\Player;
 use App\Game\Enum\SpaceType;
@@ -19,7 +22,7 @@ class GameService
         private SpaceActionManager $spaceActionManager,
     ) {}
 
-    public function createGame(array $playerData): Game
+    public function createGame(PlayerSetupData $playerData): Game
     {
         $game = new Game();
         $game->setStatus('active');
@@ -27,9 +30,9 @@ class GameService
         // Create player from setup data
         $player = new Player();
         $player->setName('Player 1'); // For now, single player
-        $player->setCharacter($playerData['character']);
-        $player->setCash($playerData['remainingCash']);
-        $player->setCryptoPortfolio($playerData['cryptoAllocations']);
+        $player->setCharacter($playerData->character);
+        $player->setCash($playerData->remainingCash);
+        $player->setCryptoPortfolio($playerData->cryptoAllocations);
         $player->setPosition(0); // Start at GO
         $player->setPlayerOrder(0);
         $player->setGame($game);
@@ -56,7 +59,7 @@ class GameService
         return Dice::rollStandardDice();
     }
 
-    public function movePlayer(Player $player, int $spaces): array
+    public function movePlayer(Game $game, Player $player, int $spaces): MoveResult
     {
         $oldPosition = $player->getPosition();
         $newPosition = ($oldPosition + $spaces) % $this->boardConfiguration->getBoardSize();
@@ -81,13 +84,13 @@ class GameService
         // Persist changes to database
         $this->entityManager->flush();
 
-        return [
-            'oldPosition' => $oldPosition,
-            'newPosition' => $newPosition,
-            'passedGo' => $passedGo,
-            'space' => $this->boardConfiguration->getSpaceInfo($newPosition),
-            'action' => $actionResult->toArray(),
-        ];
+        return new MoveResult(
+            oldPosition: $oldPosition,
+            newPosition: $newPosition,
+            passedGo: $passedGo,
+            space: $this->boardConfiguration->getSpace($newPosition),
+            action: $actionResult->toArray(),
+        );
     }
 
     public function endTurn(Game $game): void
@@ -111,27 +114,27 @@ class GameService
         return $this->cryptoService->getCurrentPrices($game);
     }
 
-    public function purchaseProperty(Game $game, Player $player, int $position): array
+    public function purchaseProperty(Game $game, Player $player, int $position): PurchaseResult
     {
         $space = $this->boardConfiguration->getSpace($position);
 
         if (!$space->isProperty() && $space->type !== SpaceType::RAILROAD && $space->type !== SpaceType::UTILITY) {
-            return ['success' => false, 'message' => 'This space cannot be purchased'];
+            return PurchaseResult::failure('This space cannot be purchased');
         }
 
         if ($space->price === null) {
-            return ['success' => false, 'message' => 'Property has no price set'];
+            return PurchaseResult::failure('Property has no price set');
         }
 
         $gameData = $game->getGameData();
         $properties = $gameData['properties'] ?? [];
 
         if (isset($properties[$position]) && $properties[$position] !== null) {
-            return ['success' => false, 'message' => 'Property is already owned'];
+            return PurchaseResult::failure('Property is already owned');
         }
 
         if ($player->getCash() < $space->price) {
-            return ['success' => false, 'message' => 'Insufficient cash to purchase property'];
+            return PurchaseResult::failure('Insufficient cash to purchase property');
         }
 
         // Purchase the property
@@ -144,13 +147,7 @@ class GameService
 
         $this->entityManager->flush();
 
-        return [
-            'success' => true,
-            'message' => "Successfully purchased {$space->name} for {$space->price}",
-            'property' => $space->name,
-            'price' => $space->price,
-            'remainingCash' => $player->getCash(),
-        ];
+        return PurchaseResult::success($space->name, $space->price, $player->getCash());
     }
 
     private function initializeProperties(): array

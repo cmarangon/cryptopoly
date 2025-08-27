@@ -1,0 +1,166 @@
+/**
+ * Themed Dialog Styles for CryptoPoly
+ *
+ * Beautiful, game-themed dialog styles extracted from JavaScript
+ */
+
+// Color variables for different dialog types
+$dialog-colors: (
+  info: #3498db,
+  warning: #f39c12,
+  error: #e74c3c,
+  success: #27ae60
+);
+
+// Animations
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Native dialog element styling
+.crypto-dialog {
+  // Reset dialog defaults
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+
+  // Custom backdrop
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  // Animation for the dialog itself
+  animation: dialogFadeIn 0.3s ease-out;
+
+  // Dialog content container
+  &__content {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90vw;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+
+  // Dynamic border color based on dialog type
+  &--info &__content {
+    border: 3px solid map-get($dialog-colors, info);
+  }
+
+  &--warning &__content {
+    border: 3px solid map-get($dialog-colors, warning);
+  }
+
+  &--error &__content {
+    border: 3px solid map-get($dialog-colors, error);
+  }
+
+  &--success &__content {
+    border: 3px solid map-get($dialog-colors, success);
+  }
+
+  // Dialog icon
+  &__icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  // Dialog title
+  &__title {
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+
+    &--info {
+      color: map-get($dialog-colors, info);
+    }
+
+    &--warning {
+      color: map-get($dialog-colors, warning);
+    }
+
+    &--error {
+      color: map-get($dialog-colors, error);
+    }
+
+    &--success {
+      color: map-get($dialog-colors, success);
+    }
+  }
+
+  // Dialog message
+  &__message {
+    margin: 0 0 2rem 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    white-space: pre-line;
+  }
+
+  // Button container
+  &__buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  // Button styles
+  &__button {
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    // Cancel button
+    &--cancel {
+      border: 2px solid #95a5a6;
+      background: transparent;
+      color: #bdc3c7;
+
+      &:hover {
+        background: #95a5a6 !important;
+        color: #2c3e50 !important;
+      }
+    }
+
+    // Confirm button variants
+    &--confirm {
+      border: none;
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+
+      &.info {
+        background: linear-gradient(45deg, map-get($dialog-colors, info), #{map-get($dialog-colors, info)}dd);
+      }
+
+      &.warning {
+        background: linear-gradient(45deg, map-get($dialog-colors, warning), #{map-get($dialog-colors, warning)}dd);
+      }
+
+      &.error {
+        background: linear-gradient(45deg, map-get($dialog-colors, error), #{map-get($dialog-colors, error)}dd);
+      }
+
+      &.success {
+        background: linear-gradient(45deg, map-get($dialog-colors, success), #{map-get($dialog-colors, success)}dd);
+      }
+    }
+  }
+}

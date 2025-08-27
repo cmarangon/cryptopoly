@@ -8,5 +8,6 @@ import './bootstrap.js';
 import './styles/app.css';
 import './styles/game.scss';
 import './styles/game-setup.scss';
+import './styles/themed-dialog.scss';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
