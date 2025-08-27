@@ -24,21 +24,20 @@ A modern Monopoly clone built with Symfony, featuring cryptocurrency mechanics a
 - **Stimulus** (Hotwired) for interactive components
 - **Turbo** for SPA-like navigation
 - **Chart.js** for price visualization
-- **Webpack Encore** with SASS compilation
+- **AssetMapper** with importmap for asset management
 - **Modern CSS** (Grid, Flexbox, CSS Custom Properties)
 
 ### Development Tools
 - **PHP-CS-Fixer** with PER Coding Style 3.0
 - **Symfony Console** for commands
 - **Doctrine Migrations** for database versioning
-- **AssetMapper/Webpack** for asset management
+- **AssetMapper** with importmap for asset management
 
 ## 📦 Installation
 
 ### Prerequisites
 - PHP 8.2 or higher
 - Composer
-- Node.js & npm
 - Symfony CLI (recommended)
 
 ### Setup
@@ -54,9 +53,9 @@ A modern Monopoly clone built with Symfony, featuring cryptocurrency mechanics a
    composer install
    ```
 
-3. **Install Node dependencies**
+3. **Install frontend dependencies**
    ```bash
-   npm install
+   php bin/console importmap:install
    ```
 
 4. **Create database and run migrations**
@@ -70,11 +69,9 @@ A modern Monopoly clone built with Symfony, featuring cryptocurrency mechanics a
    php bin/console doctrine:fixtures:load --no-interaction
    ```
 
-6. **Build assets**
+6. **Generate assets**
    ```bash
-   npm run build
-   # Or for development with watch mode:
-   npm run watch
+   php bin/console asset-map:compile
    ```
 
 7. **Start the development server**
@@ -96,13 +93,13 @@ A modern Monopoly clone built with Symfony, featuring cryptocurrency mechanics a
 # Start development server
 symfony server:start
 
-# Build assets for production
-npm run build
+# Install dependencies
+composer install
 
-# Watch assets during development  
-npm run watch
+# Install frontend dependencies
+php bin/console importmap:install
 
-# Generate assets manifest
+# Generate assets
 php bin/console asset-map:compile
 ```
 
@@ -155,9 +152,13 @@ php bin/phpunit tests/path/to/TestFile.php
 
 # Check code style (PER Coding Style 3.0)
 composer lint
+# or
+composer cs-check
 
 # Fix code style automatically
 composer lint-fix
+# or
+composer cs-fix
 
 # Run with coverage
 php bin/phpunit --coverage-html coverage/
@@ -283,7 +284,7 @@ The project uses SQLite by default, stored in `var/data.db`. Perfect for develop
 
 **Assets not loading?**
 ```bash
-npm run build
+php bin/console asset-map:compile
 php bin/console cache:clear
 ```
 
@@ -295,7 +296,7 @@ php bin/console doctrine:migrations:migrate
 
 **Styling issues?**
 ```bash
-npm run watch
+php bin/console asset-map:compile
 # Check browser console for errors
 ```
 
