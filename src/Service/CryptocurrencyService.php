@@ -170,7 +170,7 @@ class CryptocurrencyService
     public function getPriceHistory(Game $game, int $limit = 20): array
     {
         $priceHistoryRepo = $this->entityManager->getRepository(CryptocurrencyPriceHistory::class);
-        
+
         $qb = $priceHistoryRepo->createQueryBuilder('ph')
             ->select('ph, c')
             ->join('ph.cryptocurrency', 'c')
@@ -192,14 +192,14 @@ class CryptocurrencyService
                 $chartData[$cryptoName] = [
                     'name' => $historyEntry->getCryptocurrency()->getName(),
                     'symbol' => $this->getCryptoSymbol($cryptoName),
-                    'data' => []
+                    'data' => [],
                 ];
             }
 
             $chartData[$cryptoName]['data'][] = [
                 'turn' => $historyEntry->getTurnNumber(),
                 'price' => (float) $historyEntry->getPrice(),
-                'timestamp' => $historyEntry->getRecordedAt()->format('Y-m-d H:i:s')
+                'timestamp' => $historyEntry->getRecordedAt()->format('Y-m-d H:i:s'),
             ];
         }
 
@@ -210,11 +210,11 @@ class CryptocurrencyService
     {
         $mapping = [
             'BitCoin' => 'bitcoin',
-            'EthCoin' => 'ethereum', 
+            'EthCoin' => 'ethereum',
             'DogeCoin' => 'dogecoin',
             'TetherCoin' => 'tether',
             'BinanceCoin' => 'binance',
-            'CardanoCoin' => 'cardano'
+            'CardanoCoin' => 'cardano',
         ];
 
         return $mapping[$name] ?? null;
@@ -230,11 +230,11 @@ class CryptocurrencyService
     {
         $mapping = [
             'bitcoin' => 'BitCoin',
-            'ethereum' => 'EthCoin', 
+            'ethereum' => 'EthCoin',
             'dogecoin' => 'DogeCoin',
             'tether' => 'TetherCoin',
             'binance' => 'BinanceCoin',
-            'cardano' => 'CardanoCoin'
+            'cardano' => 'CardanoCoin',
         ];
 
         return $mapping[$cryptoKey] ?? null;

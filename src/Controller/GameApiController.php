@@ -179,7 +179,7 @@ final class GameApiController extends AbstractController
 
             foreach ($cryptoPrices as $cryptoKey => $cryptoData) {
                 $balance = $playerPortfolio[$cryptoKey] ?? 0.0;
-                
+
                 $cryptoInfo = [
                     'key' => $cryptoKey,
                     'name' => $cryptoData['name'],

@@ -13,6 +13,6 @@ use App\Game\ValueObject\SpaceActionResult;
 interface SpaceActionInterface
 {
     public function execute(Game $game, Player $player, Space $space): SpaceActionResult;
-    
+
     public function canHandle(SpaceType $spaceType): bool;
 }
